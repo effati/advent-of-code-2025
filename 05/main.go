@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"slices"
@@ -43,7 +44,7 @@ func part1(inventory inventory) int {
 
 func part2(inventory inventory) int {
 	mergedRanges := mergeOverlappingRanges(inventory.freshIngredients)
-	count := int(0)
+	count := 0
 
 	for _, ir := range mergedRanges {
 		count += (ir.end - ir.start) + 1 // to include the exlusive end
@@ -57,13 +58,7 @@ func mergeOverlappingRanges(ranges []intRange) []intRange {
 	copy(sortedRanges, ranges)
 
 	slices.SortFunc(sortedRanges, func(a intRange, b intRange) int {
-		if a.start < b.start {
-			return -1
-		}
-		if a.start > b.start {
-			return 1
-		}
-		return 0
+		return cmp.Compare(a.start, b.start)
 	})
 
 	outRanges := []intRange{sortedRanges[0]}
